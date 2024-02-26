@@ -1,12 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { Admin } from '@nestjs/microservices/external/kafka.interface';
 import { Kafka } from 'kafkajs';
 
 @Injectable()
-export class FibonacciService {
+export class FibonacciService implements OnModuleInit {
   private admin: Admin;
-
   constructor(@Inject('FIBONACCI_SERVICE') private client: ClientKafka) {}
 
   fibonacci(n: number): number {

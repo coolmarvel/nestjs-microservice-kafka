@@ -10,7 +10,7 @@ export class FibonacciController {
     return this.fibonacciService.fibonacci(40);
   }
 
-  @Get('microservices')
+  @Get('microservice')
   async getFibonacciResult() {
     return await this.fibonacciService.fibonacciResult(40);
   }
