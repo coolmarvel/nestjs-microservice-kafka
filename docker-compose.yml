@@ -1,0 +1,15 @@
+version: '3'
+services:
+  # api-gateway:
+  #   build: ./apps/api-gateway
+  #   container_name: api-gateway
+  #   ports:
+  #     - 3000:3000
+  #   volumes:
+  #     - ./apps/api-gateway/src:/usr/src/app/src
+
+  consumer:
+    build: ./apps/consumer
+    container_name: consumer
+    volumes:
+      - ./apps/consumer/src:/usr/src/app/src
