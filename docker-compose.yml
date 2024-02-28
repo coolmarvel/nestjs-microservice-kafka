@@ -1,15 +1,22 @@
 version: '3'
 services:
-  # api-gateway:
-  #   build: ./apps/api-gateway
-  #   container_name: api-gateway
-  #   ports:
-  #     - 3000:3000
-  #   volumes:
-  #     - ./apps/api-gateway/src:/usr/src/app/src
-
-  consumer:
-    build: ./apps/consumer
-    container_name: consumer
+  api-gateway:
+    build: ./apps/api-gateway
+    container_name: api-gateway
+    ports:
+      - 3000:3000
+    environment:
+      - NODE_ENV=development
+      - RUNNING_IN_DOCKER=true
     volumes:
-      - ./apps/consumer/src:/usr/src/app/src
+      - /tmp/history/npm-cache:/root/.npm:z
+      - ./apps/api-gateway/src:/usr/src/app/src:z
+
+networks:
+  kafka:
+    name: kafka
+    driver: bridge
+    external: true
+
+  volumes:
+    microservice_db:data:

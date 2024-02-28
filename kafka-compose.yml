@@ -15,8 +15,8 @@ services:
       - '9092:9092' # Kafka 외부 포트 매핑
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: INTERNAL://kafka:9094,EXTERNAL://0.0.0.0:9092 # 0.0.0.0 Kafka 모든 IP에 바인딩
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9094,EXTERNAL://192.168.0.204:9092 # your-host-ip는 외부에서 접근 가능한 IP나 DNS
+      KAFKA_LISTENERS: INTERNAL://:9094,EXTERNAL://:9092 # 0.0.0.0 Kafka 모든 IP에 바인딩
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9094,EXTERNAL://localhost:9092 # your-host-ip는 외부에서 접근 가능한 IP나 DNS
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1 # 단일 브로커 환경에서 필요
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1 # 단일 브로커 환경에서 필요
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1 # 단일 브로커 환경에서 필요
@@ -27,14 +27,25 @@ services:
       KAFKA_SECURITY_PROTOCOL: INTERNAL
       KAFKA_INTERCEPTORS: io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor,io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor
       KAFKA_AUTHORIZERS: org.apache.kafka.server.authorizer.SimpleAclAuthorizer
-      KAFKA_AUTHORIZER_PROPERTIES: "allow.hosts=192.168.0.204,127.0.0.1"
-
+      KAFKA_AUTHORIZER_PROPERTIES: 'allow.hosts=192.168.0.204,127.0.0.1,192.168.0.110'
     restart: unless-stopped
     depends_on:
       - zookeeper
     networks:
       - kafka
 
+  kafdrop:
+    image: obsidiandynamics/kafdrop:latest
+    networks:
+      - kafka
+    depends_on:
+      - kafka
+    ports:
+      - 9000:9000
+    environment:
+      KAFKA_BROKERCONNECT: kafka:9094
+
 networks:
   kafka:
+    name: kafka
     driver: bridge

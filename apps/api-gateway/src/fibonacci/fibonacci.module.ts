@@ -10,7 +10,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         name: 'FIBONACCI_SERVICE',
         transport: Transport.KAFKA,
         options: {
-          client: { clientId: 'api-gateway', brokers: ['localhost:9092'] },
+          client: { clientId: 'api-gateway', brokers: [process.env.RUNNING_IN_DOCKER === 'true' ? 'kafka:9093' : 'localhost:9092'] },
           consumer: { groupId: 'kafka-microservices' },
         },
       },
